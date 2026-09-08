@@ -127,9 +127,29 @@
             font-weight: bold;
             cursor: pointer;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        th { background: #f1f5f9; }
         .status-pending { color: #d97706; font-weight: bold; }
         .status-completed { color: #16a34a; font-weight: bold; }
         .status-cancelled { color: #dc2626; font-weight: bold; }
+        .btn-action-complete {
+            background: #22c55e; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-right: 4px;
+        }
+        .btn-action-cancel {
+            background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -142,6 +162,7 @@
             <button class="switcher-btn btn-admin" onclick="loginAdmin()">🔐 Admin</button>
         </div>
 
+        <!-- TopUp Panel -->
         <div id="topup-panel">
             <div class="banner-header">Fast & Easy Top Up</div>
             <div class="banner-subtext">Free Fire UID দিয়ে প্যাকেজ নির্বাচন করে অর্ডার তৈরি করুন।</div>
@@ -195,11 +216,34 @@
 
             <button class="submit-order-btn" onclick="submitOrder()">📩 অর্ডার সাবমিট করুন</button>
         </div>
+
+        <!-- Admin Panel -->
+        <div id="admin-panel" style="display: none;">
+            <div class="banner-header">🔐 Admin Dashboard</div>
+            <div class="banner-subtext">Welcome to the admin panel!</div>
+            <div class="section">
+                <div class="section-label">Order list:</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>UID</th>
+                            <th>Package</th>
+                            <th>Trx ID</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-list">
+                        <tr><td colspan="5">No orders have been submitted yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <script>
-        // 🔑 আপনার ONECOMPILER API KEY
-        const ONECOMPILER_API_KEY = "oc_452m9j9xf...d6e0"; // এখানে আপনার সম্পূর্ণ API Key-টি বসাবেন
+        // 🔑 ONECOMPILER API KEY
+        const ONECOMPILER_API_KEY = "oc_452m9j9xf...d6e0";
 
         let selectedPackage = "";
         let orders = [];
@@ -213,22 +257,13 @@
             var uid = document.getElementById("user-uid").value;
             var trx = document.getElementById("user-trx").value;
 
-            if (!uid) {
-                alert("অনুগ্রহ করে Free Fire UID লিখুন!");
-                return;
-            }
-            if (!selectedPackage) {
-                alert("অনুগ্রহ করে একটি প্যাকেজ সিলেক্ট করুন!");
-                return;
-            }
-            if (!trx) {
-                alert("অনুগ্রহ করে bKash Transaction ID লিখুন!");
-                return;
-            }
+            if (!uid) { alert("অনুগ্রহ করে Free Fire UID লিখুন!"); return; }
+            if (!selectedPackage) { alert("অনুগ্রহ করে একটি প্যাকেজ সিলেক্ট করুন!"); return; }
+            if (!trx) { alert("অনুগ্রহ করে bKash Transaction ID লিখুন!"); return; }
 
-            // OneCompiler API কল করার ফাংশন
+            // API Call
             try {
-                const response = await fetch("https://onecompiler.com/api/v1/run", {
+                await fetch("https://onecompiler.com/api/v1/run", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -237,47 +272,66 @@
                     body: JSON.stringify({
                         language: "python",
                         stdin: `${uid}, ${selectedPackage}, ${trx}`,
-                        files: [
-                            {
-                                name: "main.py",
-                                content: `print("Order received for UID:", "${uid}")`
-                            }
-                        ]
+                        files: [{ name: "main.py", content: `print("Order received for UID:", "${uid}")` }]
                     })
                 });
-
-                const data = await response.json();
-                console.log("API Response:", data);
-
             } catch (error) {
-                console.error("API Call Error:", error);
+                console.error("API Error:", error);
             }
 
-            orders.push({
-                uid: uid,
-                pkg: selectedPackage,
-                trx: trx,
-                status: 'Pending'
-            });
-
+            orders.push({ uid: uid, pkg: selectedPackage, trx: trx, status: 'Pending' });
             alert("আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে!");
 
             document.getElementById("user-uid").value = "";
             document.getElementById("user-trx").value = "";
             selectedPackage = "";
+            updateAdminTable();
         }
 
         function showTopUp() {
             document.getElementById("topup-panel").style.display = "block";
+            document.getElementById("admin-panel").style.display = "none";
         }
 
         function loginAdmin() {
             var password = prompt("অ্যাডমিন প্যানেলে প্রবেশ করতে পাসওয়ার্ড দিন:");
             if (password === "jihad1234") {
                 alert("পাসওয়ার্ড সঠিক হয়েছে!");
+                document.getElementById("topup-panel").style.display = "none";
+                document.getElementById("admin-panel").style.display = "block";
+                updateAdminTable();
             } else if (password !== null) {
                 alert("ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।");
             }
+        }
+
+        function updateAdminTable() {
+            var tbody = document.getElementById("order-list");
+            if (orders.length === 0) return;
+
+            tbody.innerHTML = "";
+            orders.forEach(function(o, index) {
+                var statusClass = 'status-pending';
+                if(o.status === 'Completed') statusClass = 'status-completed';
+                if(o.status === 'Cancelled') statusClass = 'status-cancelled';
+
+                var row = `<tr>
+                    <td>${o.uid}</td>
+                    <td>${o.pkg}</td>
+                    <td>${o.trx}</td>
+                    <td class="${statusClass}">${o.status}</td>
+                    <td>
+                        <button class="btn-action-complete" onclick="changeStatus(${index}, 'Completed')">Complete</button>
+                        <button class="btn-action-cancel" onclick="changeStatus(${index}, 'Cancelled')">Cancel</button>
+                    </td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function changeStatus(index, newStatus) {
+            orders[index].status = newStatus;
+            updateAdminTable();
         }
     </script>
 </body>
