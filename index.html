@@ -73,13 +73,22 @@
             margin-bottom: 20px;
             line-height: 1.5;
         }
-        .bkash-box {
-            background-color: #e11d48;
-            color: white;
-            padding: 16px;
-            border-radius: 14px;
+        .payment-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             margin-bottom: 20px;
         }
+        .payment-box {
+            color: white;
+            padding: 14px 16px;
+            border-radius: 14px;
+            font-weight: 600;
+        }
+        .bkash-bg { background-color: #e11d48; }
+        .nagad-bg { background-color: #d97706; }
+        .rocket-bg { background-color: #7c3aed; }
+
         .section {
             margin-bottom: 20px;
         }
@@ -107,13 +116,19 @@
             background: white;
             cursor: pointer;
         }
+        .card-subtext {
+            font-size: 11px;
+            color: #ef4444;
+            font-weight: bold;
+            margin-top: 4px;
+        }
         .price-btn {
             background: #6366f1;
             color: white;
             border: none;
             padding: 8px 16px;
             border-radius: 8px;
-            margin-top: 10px;
+            margin-top: 8px;
             cursor: pointer;
         }
         .submit-order-btn {
@@ -168,12 +183,22 @@
             <div class="banner-subtext">Free Fire UID দিয়ে প্যাকেজ নির্বাচন করে অর্ডার তৈরি করুন।</div>
 
             <div class="notice-box">
-                ⚠️ <b>Note:</b> নিচে দেওয়া বিকাশ নম্বরে টাকা সেন্ড মানি করে Transaction ID দিয়ে অর্ডার সাবমিট করুন।
+                ⚠️ <b>Note:</b> নিচে দেওয়া বিকাশ, নগদ বা রকেট নম্বরে টাকা সেন্ড মানি করে Transaction ID দিয়ে অর্ডার সাবমিট করুন।
             </div>
 
-            <div class="bkash-box">
-                <div>💖 <b>bKash Personal (Send Money)</b></div>
-                <div class="bkash-number">01863816606</div>
+            <div class="payment-container">
+                <div class="payment-box bkash-bg">
+                    💖 <b>bKash Personal (Send Money)</b><br>
+                    <span>01863816606</span>
+                </div>
+                <div class="payment-box nagad-bg">
+                    🟠 <b>Nagad Personal (Send Money)</b><br>
+                    <span>01863816606</span>
+                </div>
+                <div class="payment-box rocket-bg">
+                    🟣 <b>Rocket Personal (Send Money)</b><br>
+                    <span>01863816606</span>
+                </div>
             </div>
 
             <div class="section">
@@ -198,20 +223,38 @@
             <div class="section">
                 <div class="section-label">Subscription Package</div>
                 <div class="grid-container">
-                    <div class="card" onclick="selectPkg('Weekly Lite (৳ 40)')">
+                    <!-- নিয়মিত প্যাকেজসমূহ -->
+                    <div class="card" onclick="selectPkg('Weekly Membership (৳ 150)')">
+                        <div><strong>Weekly Membership</strong></div>
+                        <button class="price-btn">৳ 150</button>
+                    </div>
+                    <div class="card" onclick="selectPkg('Monthly Membership (৳ 750)')">
+                        <div><strong>Monthly Membership</strong></div>
+                        <button class="price-btn">৳ 750</button>
+                    </div>
+
+                    <!-- ভাগ্যর উপর নির্ভরশীল প্যাকেজসমূহ -->
+                    <div class="card" onclick="selectPkg('Weekly Lite (৳ 40) - ভাগ্যর উপর নির্ভরশীল')">
                         <div><strong>Weekly Lite</strong></div>
+                        <div class="card-subtext">(ভাগ্যর উপর নির্ভরশীল)</div>
                         <button class="price-btn">৳ 40</button>
                     </div>
-                    <div class="card" onclick="selectPkg('Weekly (৳ 130)')">
+                    <div class="card" onclick="selectPkg('Weekly (৳ 130) - ভাগ্যর উপর নির্ভরশীল')">
                         <div><strong>Weekly</strong></div>
+                        <div class="card-subtext">(ভাগ্যর উপর নির্ভরশীল)</div>
                         <button class="price-btn">৳ 130</button>
+                    </div>
+                    <div class="card" onclick="selectPkg('Monthly (৳ 500) - ভাগ্যর উপর নির্ভরশীল')" style="grid-column: span 2;">
+                        <div><strong>Monthly</strong></div>
+                        <div class="card-subtext">(ভাগ্যর উপর নির্ভরশীল)</div>
+                        <button class="price-btn">৳ 500</button>
                     </div>
                 </div>
             </div>
 
             <div class="section">
-                <div class="section-label">bKash Transaction ID</div>
-                <input type="text" id="user-trx" class="input-box" placeholder="bKash Transaction ID লিখুন">
+                <div class="section-label">Transaction ID (bKash/Nagad/Rocket)</div>
+                <input type="text" id="user-trx" class="input-box" placeholder="Transaction ID লিখুন">
             </div>
 
             <button class="submit-order-btn" onclick="submitOrder()">📩 অর্ডার সাবমিট করুন</button>
@@ -259,7 +302,7 @@
 
             if (!uid) { alert("অনুগ্রহ করে Free Fire UID লিখুন!"); return; }
             if (!selectedPackage) { alert("অনুগ্রহ করে একটি প্যাকেজ সিলেক্ট করুন!"); return; }
-            if (!trx) { alert("অনুগ্রহ করে bKash Transaction ID লিখুন!"); return; }
+            if (!trx) { alert("অনুগ্রহ করে Transaction ID লিখুন!"); return; }
 
             // API Call
             try {
