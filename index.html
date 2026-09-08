@@ -79,127 +79,57 @@
             padding: 16px;
             border-radius: 14px;
             margin-bottom: 20px;
-            text-align: center;
-        }
-        .bkash-number {
-            font-size: 22px;
-            font-weight: bold;
-            background-color: #ffffff;
-            color: #e11d48;
-            padding: 8px 14px;
-            border-radius: 8px;
-            display: inline-block;
-            margin-top: 8px;
-            letter-spacing: 1px;
         }
         .section {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         .section-label {
-            font-size: 16px;
-            font-weight: 800;
-            margin-bottom: 10px;
+            font-weight: bold;
+            margin-bottom: 8px;
         }
         .input-box {
             width: 100%;
-            padding: 14px 16px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            background-color: #ffffff;
-            font-size: 15px;
-            outline: none;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 16px;
         }
         .grid-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 12px;
         }
         .card {
-            background: #ffffff;
-            border: 2px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 16px;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 12px;
             text-align: center;
+            background: white;
             cursor: pointer;
         }
         .price-btn {
-            background-color: #6366f1;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 15px;
-            padding: 10px 0;
-            width: 100%;
-            border-radius: 10px;
+            background: #6366f1;
+            color: white;
             border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
             margin-top: 10px;
             cursor: pointer;
         }
         .submit-order-btn {
             width: 100%;
-            background-color: #6366f1;
-            color: white;
-            font-size: 18px;
-            font-weight: 800;
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-        }
-        #admin-panel {
-            display: none;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 16px;
-            border: 2px solid #6366f1;
-            overflow-x: auto;
-        }
-        .order-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        .order-table th, .order-table td {
-            border: 1px solid #cbd5e1;
-            padding: 8px;
-            text-align: center;
-            font-size: 13px;
-        }
-        .order-table th {
-            background-color: #f1f5f9;
-        }
-        .btn-action-complete {
             background-color: #22c55e;
             color: white;
             border: none;
-            padding: 6px 10px;
-            border-radius: 6px;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-            margin-right: 4px;
         }
-        .btn-action-cancel {
-            background-color: #ef4444;
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-        }
-        .status-pending {
-            color: #d97706;
-            font-weight: bold;
-        }
-        .status-completed {
-            color: #16a34a;
-            font-weight: bold;
-        }
-        .status-cancelled {
-            color: #dc2626;
-            font-weight: bold;
-        }
+        .status-pending { color: #d97706; font-weight: bold; }
+        .status-completed { color: #16a34a; font-weight: bold; }
+        .status-cancelled { color: #dc2626; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -255,10 +185,6 @@
                         <div><strong>Weekly</strong></div>
                         <button class="price-btn">৳ 130</button>
                     </div>
-                    <div class="card" onclick="selectPkg('Monthly (৳ 700)')">
-                        <div><strong>Monthly</strong></div>
-                        <button class="price-btn">৳ 700</button>
-                    </div>
                 </div>
             </div>
 
@@ -269,32 +195,12 @@
 
             <button class="submit-order-btn" onclick="submitOrder()">📩 অর্ডার সাবমিট করুন</button>
         </div>
-
-        <div id="admin-panel">
-            <h2>🔐 Admin Dashboard</h2>
-            <p style="margin: 10px 0; color: #16a34a; font-weight: bold;">স্বাগতম অ্যাডমিন প্যানেলে!</p>
-            <hr><br>
-            <h3>অর্ডার এর তালিকা:</h3>
-            <table class="order-table">
-                <thead>
-                    <tr>
-                        <th>UID</th>
-                        <th>Package</th>
-                        <th>Trx ID</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="order-list">
-                    <tr>
-                        <td colspan="5" style="text-align: center; color: #94a3b8;">এখনো কোনো অর্ডার জমা হয়নি</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 
     <script>
+        // 🔑 আপনার ONECOMPILER API KEY
+        const ONECOMPILER_API_KEY = "oc_452m9j9xf...d6e0"; // এখানে আপনার সম্পূর্ণ API Key-টি বসাবেন
+
         let selectedPackage = "";
         let orders = [];
 
@@ -303,81 +209,75 @@
             alert("আপনি নির্বাচন করেছেন: " + pkgName);
         }
 
-        function submitOrder() {
+        async function submitOrder() {
             var uid = document.getElementById("user-uid").value;
             var trx = document.getElementById("user-trx").value;
 
-            if(!uid) {
+            if (!uid) {
                 alert("অনুগ্রহ করে Free Fire UID লিখুন!");
                 return;
             }
-            if(!selectedPackage) {
+            if (!selectedPackage) {
                 alert("অনুগ্রহ করে একটি প্যাকেজ সিলেক্ট করুন!");
                 return;
             }
-            if(!trx) {
+            if (!trx) {
                 alert("অনুগ্রহ করে bKash Transaction ID লিখুন!");
                 return;
             }
 
-            orders.push({ 
-                uid: uid, 
-                pkg: selectedPackage, 
-                trx: trx, 
-                status: 'Pending' 
+            // OneCompiler API কল করার ফাংশন
+            try {
+                const response = await fetch("https://onecompiler.com/api/v1/run", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + ONECOMPILER_API_KEY
+                    },
+                    body: JSON.stringify({
+                        language: "python",
+                        stdin: `${uid}, ${selectedPackage}, ${trx}`,
+                        files: [
+                            {
+                                name: "main.py",
+                                content: `print("Order received for UID:", "${uid}")`
+                            }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                console.log("API Response:", data);
+
+            } catch (error) {
+                console.error("API Call Error:", error);
+            }
+
+            orders.push({
+                uid: uid,
+                pkg: selectedPackage,
+                trx: trx,
+                status: 'Pending'
             });
-            
+
             alert("আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে!");
-            
+
             document.getElementById("user-uid").value = "";
             document.getElementById("user-trx").value = "";
             selectedPackage = "";
-            updateAdminTable();
         }
 
-        function updateAdminTable() {
-            var tbody = document.getElementById("order-list");
-            if(orders.length === 0) return;
-            
-            tbody.innerHTML = "";
-            orders.forEach(function(o, index) {
-                var statusClass = 'status-pending';
-                if(o.status === 'Completed') statusClass = 'status-completed';
-                if(o.status === 'Cancelled') statusClass = 'status-cancelled';
-
-                var row = `<tr>
-                    <td>${o.uid}</td>
-                    <td>${o.pkg}</td>
-                    <td>${o.trx}</td>
-                    <td class="${statusClass}">${o.status}</td>
-                    <td>
-                        <button class="btn-action-complete" onclick="changeStatus(${index}, 'Completed')">Complete</button>
-                        <button class="btn-action-cancel" onclick="changeStatus(${index}, 'Cancelled')">Cancel</button>
-                    </td>
-                </tr>`;
-                tbody.innerHTML += row;
-            });
-        }
-
-        function changeStatus(index, newStatus) {
-            orders[index].status = newStatus;
-            updateAdminTable();
+        function showTopUp() {
+            document.getElementById("topup-panel").style.display = "block";
         }
 
         function loginAdmin() {
             var password = prompt("অ্যাডমিন প্যানেলে প্রবেশ করতে পাসওয়ার্ড দিন:");
             if (password === "jihad1234") {
-                document.getElementById("topup-panel").style.display = "none";
-                document.getElementById("admin-panel").style.display = "block";
                 alert("পাসওয়ার্ড সঠিক হয়েছে!");
             } else if (password !== null) {
                 alert("ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।");
             }
-        }
-
-        function showTopUp() {
-            document.getElementById("topup-panel").style.display = "block";
-            document.getElementById("admin-panel").style.display = "none";
         }
     </script>
 </body>
