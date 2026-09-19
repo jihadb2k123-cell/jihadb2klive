@@ -141,6 +141,17 @@
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
+            margin-bottom: 30px;
+        }
+        .order-history-section {
+            margin-top: 30px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .table-responsive {
+            overflow-x: auto;
         }
         table {
             width: 100%;
@@ -148,6 +159,7 @@
             background: white;
             border-radius: 8px;
             overflow: hidden;
+            margin-top: 10px;
         }
         th, td {
             border: 1px solid #e2e8f0;
@@ -258,6 +270,26 @@
             </div>
 
             <button class="submit-order-btn" onclick="submitOrder()">📩 অর্ডার সাবমিট করুন</button>
+
+            <!-- User Order History (TopUp পেজের নিচে অর্ডার দেখানোর সেকশন) -->
+            <div class="order-history-section">
+                <div class="section-label" style="font-size: 18px; text-align: center;">📜 সাম্প্রতিক অর্ডারের তালিকা</div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>UID</th>
+                                <th>Package</th>
+                                <th>Trx ID</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-order-list">
+                            <tr><td colspan="4">এখনো কোনো অর্ডার সাবমিট করা হয়নি।</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <!-- Admin Panel -->
@@ -266,20 +298,22 @@
             <div class="banner-subtext">Welcome to the admin panel!</div>
             <div class="section">
                 <div class="section-label">Order list:</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>UID</th>
-                            <th>Package</th>
-                            <th>Trx ID</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="order-list">
-                        <tr><td colspan="5">No orders have been submitted yet.</td></tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>UID</th>
+                                <th>Package</th>
+                                <th>Trx ID</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-order-list">
+                            <tr><td colspan="5">No orders have been submitted yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -328,7 +362,7 @@
             document.getElementById("user-uid").value = "";
             document.getElementById("user-trx").value = "";
             selectedPackage = "";
-            updateAdminTable();
+            updateTables();
         }
 
         function showTopUp() {
@@ -342,23 +376,39 @@
                 alert("পাসওয়ার্ড সঠিক হয়েছে!");
                 document.getElementById("topup-panel").style.display = "none";
                 document.getElementById("admin-panel").style.display = "block";
-                updateAdminTable();
+                updateTables();
             } else if (password !== null) {
                 alert("ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।");
             }
         }
 
-        function updateAdminTable() {
-            var tbody = document.getElementById("order-list");
+        function updateTables() {
+            // Update User Order List
+            var userTbody = document.getElementById("user-order-list");
+            // Update Admin Order List
+            var adminTbody = document.getElementById("admin-order-list");
+
             if (orders.length === 0) return;
 
-            tbody.innerHTML = "";
+            userTbody.innerHTML = "";
+            adminTbody.innerHTML = "";
+
             orders.forEach(function(o, index) {
                 var statusClass = 'status-pending';
                 if(o.status === 'Completed') statusClass = 'status-completed';
                 if(o.status === 'Cancelled') statusClass = 'status-cancelled';
 
-                var row = `<tr>
+                // User Row
+                var userRow = `<tr>
+                    <td>${o.uid}</td>
+                    <td>${o.pkg}</td>
+                    <td>${o.trx}</td>
+                    <td class="${statusClass}">${o.status}</td>
+                </tr>`;
+                userTbody.innerHTML += userRow;
+
+                // Admin Row
+                var adminRow = `<tr>
                     <td>${o.uid}</td>
                     <td>${o.pkg}</td>
                     <td>${o.trx}</td>
@@ -368,13 +418,13 @@
                         <button class="btn-action-cancel" onclick="changeStatus(${index}, 'Cancelled')">Cancel</button>
                     </td>
                 </tr>`;
-                tbody.innerHTML += row;
+                adminTbody.innerHTML += adminRow;
             });
         }
 
         function changeStatus(index, newStatus) {
             orders[index].status = newStatus;
-            updateAdminTable();
+            updateTables();
         }
     </script>
 </body>
