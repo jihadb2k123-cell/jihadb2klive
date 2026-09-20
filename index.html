@@ -116,6 +116,10 @@
             background: white;
             cursor: pointer;
         }
+        .card.selected {
+            border: 2px solid #6366f1;
+            background-color: #e0e7ff;
+        }
         .card-subtext {
             font-size: 11px;
             color: #ef4444;
@@ -221,11 +225,11 @@
             <div class="section">
                 <div class="section-label">Diamond Package</div>
                 <div class="grid-container">
-                    <div class="card" onclick="selectPkg('100 Diamonds (৳ 80)')">
+                    <div class="card" onclick="selectPkg(this, '100 Diamonds (৳ 80)')">
                         <div><strong>100 Diamonds</strong></div>
                         <button class="price-btn">৳ 80</button>
                     </div>
-                    <div class="card" onclick="selectPkg('310 Diamonds (৳ 240)')">
+                    <div class="card" onclick="selectPkg(this, '310 Diamonds (৳ 240)')">
                         <div><strong>310 Diamonds</strong></div>
                         <button class="price-btn">৳ 240</button>
                     </div>
@@ -235,30 +239,27 @@
             <div class="section">
                 <div class="section-label">Subscription Package</div>
                 <div class="grid-container">
-                    <!-- নিয়মিত প্যাকেজসমূহ -->
-                    <div class="card" onclick="selectPkg('Weekly Membership (৳ 150)')">
+                    <div class="card" onclick="selectPkg(this, 'Weekly Membership (৳ 150)')">
                         <div><strong>Weekly Membership</strong></div>
                         <button class="price-btn">৳ 150</button>
                     </div>
-                    <div class="card" onclick="selectPkg('Monthly Membership (৳ 750)')">
+                    <div class="card" onclick="selectPkg(this, 'Monthly Membership (৳ 750)')">
                         <div><strong>Monthly Membership</strong></div>
                         <button class="price-btn">৳ 750</button>
                     </div>
-
-                    <!-- ভাগ্যর উপর নির্ভরশীল প্যাকেজসমূহ -->
-                    <div class="card" onclick="selectPkg('Weekly Lite (৳ 40) - ভাগ্যর উপর নির্ভরশীল')">
+                    <div class="card" onclick="selectPkg(this, 'Weekly Lite (৳ 40) - Depends on luck')">
                         <div><strong>Weekly Lite</strong></div>
-                        <div class="card-subtext">(ভাগ্যর উপর নির্ভরশীল)</div>
+                        <div class="card-subtext">(Depends on luck)</div>
                         <button class="price-btn">৳ 40</button>
                     </div>
-                    <div class="card" onclick="selectPkg('Weekly (৳ 130) - ভাগ্যর উপর নির্ভরশীল')">
+                    <div class="card" onclick="selectPkg(this, 'Weekly (৳ 130) - Depends on luck')">
                         <div><strong>Weekly</strong></div>
-                        <div class="card-subtext">(ভাগ্যর উপর নির্ভরশীল)</div>
+                        <div class="card-subtext">(Depends on luck)</div>
                         <button class="price-btn">৳ 130</button>
                     </div>
-                    <div class="card" onclick="selectPkg('Monthly (৳ 500) - ভাগ্যর উপর নির্ভরশীল')" style="grid-column: span 2;">
+                    <div class="card" onclick="selectPkg(this, 'Monthly (৳ 500) - Depends on luck')" style="grid-column: span 2;">
                         <div><strong>Monthly</strong></div>
-                        <div class="card-subtext">(ভাগ্যর উপর নির্ভরশীল)</div>
+                        <div class="card-subtext">(Depends on luck)</div>
                         <button class="price-btn">৳ 500</button>
                     </div>
                 </div>
@@ -269,11 +270,11 @@
                 <input type="text" id="user-trx" class="input-box" placeholder="Transaction ID লিখুন">
             </div>
 
-            <button class="submit-order-btn" onclick="submitOrder()">📩 অর্ডার সাবমিট করুন</button>
+            <button class="submit-order-btn" onclick="submitOrder()">📩 Submit order</button>
 
-            <!-- User Order History (TopUp পেজের নিচে অর্ডার দেখানোর সেকশন) -->
+            <!-- User Order History -->
             <div class="order-history-section">
-                <div class="section-label" style="font-size: 18px; text-align: center;">📜 সাম্প্রতিক অর্ডারের তালিকা</div>
+                <div class="section-label" style="font-size: 18px; text-align: center;">📜 List of recent orders</div>
                 <div class="table-responsive">
                     <table>
                         <thead>
@@ -285,7 +286,7 @@
                             </tr>
                         </thead>
                         <tbody id="user-order-list">
-                            <tr><td colspan="4">এখনো কোনো অর্ডার সাবমিট করা হয়নি।</td></tr>
+                            <tr><td colspan="4">No orders have been submitted yet.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -319,49 +320,45 @@
     </div>
 
     <script>
-        // 🔑 ONECOMPILER API KEY
-        const ONECOMPILER_API_KEY = "oc_452m9j9xf...d6e0";
-
         let selectedPackage = "";
         let orders = [];
 
-        function selectPkg(pkgName) {
+        // পেজ লোড হলে ব্রাউজারের সেভ করা অর্ডার লোড হবে
+        window.onload = function() {
+            let savedOrders = localStorage.getItem("jihad_orders");
+            if (savedOrders) {
+                orders = JSON.parse(savedOrders);
+                updateTables();
+            }
+        };
+
+        function selectPkg(element, pkgName) {
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
             selectedPackage = pkgName;
-            alert("আপনি নির্বাচন করেছেন: " + pkgName);
         }
 
-        async function submitOrder() {
-            var uid = document.getElementById("user-uid").value;
-            var trx = document.getElementById("user-trx").value;
+        function submitOrder() {
+            var uid = document.getElementById("user-uid").value.trim();
+            var trx = document.getElementById("user-trx").value.trim();
 
             if (!uid) { alert("অনুগ্রহ করে Free Fire UID লিখুন!"); return; }
             if (!selectedPackage) { alert("অনুগ্রহ করে একটি প্যাকেজ সিলেক্ট করুন!"); return; }
             if (!trx) { alert("অনুগ্রহ করে Transaction ID লিখুন!"); return; }
 
-            // API Call
-            try {
-                await fetch("https://onecompiler.com/api/v1/run", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + ONECOMPILER_API_KEY
-                    },
-                    body: JSON.stringify({
-                        language: "python",
-                        stdin: `${uid}, ${selectedPackage}, ${trx}`,
-                        files: [{ name: "main.py", content: `print("Order received for UID:", "${uid}")` }]
-                    })
-                });
-            } catch (error) {
-                console.error("API Error:", error);
-            }
+            // নতুন অর্ডার তালিকায় যুক্ত করা
+            orders.unshift({ uid: uid, pkg: selectedPackage, trx: trx, status: 'Pending' });
 
-            orders.push({ uid: uid, pkg: selectedPackage, trx: trx, status: 'Pending' });
+            // ব্রাউজারের মেমরিতে (LocalStorage) সেভ করা
+            localStorage.setItem("jihad_orders", JSON.stringify(orders));
+
             alert("আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে!");
 
             document.getElementById("user-uid").value = "";
             document.getElementById("user-trx").value = "";
             selectedPackage = "";
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+
             updateTables();
         }
 
@@ -383,12 +380,14 @@
         }
 
         function updateTables() {
-            // Update User Order List
             var userTbody = document.getElementById("user-order-list");
-            // Update Admin Order List
             var adminTbody = document.getElementById("admin-order-list");
 
-            if (orders.length === 0) return;
+            if (orders.length === 0) {
+                userTbody.innerHTML = '<tr><td colspan="4">No orders have been submitted yet.</td></tr>';
+                adminTbody.innerHTML = '<tr><td colspan="5">No orders have been submitted yet.</td></tr>';
+                return;
+            }
 
             userTbody.innerHTML = "";
             adminTbody.innerHTML = "";
@@ -398,7 +397,6 @@
                 if(o.status === 'Completed') statusClass = 'status-completed';
                 if(o.status === 'Cancelled') statusClass = 'status-cancelled';
 
-                // User Row
                 var userRow = `<tr>
                     <td>${o.uid}</td>
                     <td>${o.pkg}</td>
@@ -407,7 +405,6 @@
                 </tr>`;
                 userTbody.innerHTML += userRow;
 
-                // Admin Row
                 var adminRow = `<tr>
                     <td>${o.uid}</td>
                     <td>${o.pkg}</td>
@@ -424,6 +421,7 @@
 
         function changeStatus(index, newStatus) {
             orders[index].status = newStatus;
+            localStorage.setItem("jihad_orders", JSON.stringify(orders));
             updateTables();
         }
     </script>
