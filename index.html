@@ -323,7 +323,7 @@
         let selectedPackage = "";
         let orders = [];
 
-        // পেজ লোড হলে ব্রাউজারের সেভ করা অর্ডার লোড হবে
+        // পেজ লোড হলে ব্রাউজারের সেভ করা অর্ডার নিয়ে আসবে
         window.onload = function() {
             let savedOrders = localStorage.getItem("jihad_orders");
             if (savedOrders) {
@@ -346,14 +346,15 @@
             if (!selectedPackage) { alert("অনুগ্রহ করে একটি প্যাকেজ সিলেক্ট করুন!"); return; }
             if (!trx) { alert("অনুগ্রহ করে Transaction ID লিখুন!"); return; }
 
-            // নতুন অর্ডার তালিকায় যুক্ত করা
+            // নতুন অর্ডার যুক্ত করা (পুরোনো অর্ডার মুছে যাবে না)
             orders.unshift({ uid: uid, pkg: selectedPackage, trx: trx, status: 'Pending' });
 
-            // ব্রাউজারের মেমরিতে (LocalStorage) সেভ করা
+            // LocalStorage-এ দীর্ঘস্থায়ীভাবে ডাটা সংরক্ষণ
             localStorage.setItem("jihad_orders", JSON.stringify(orders));
 
             alert("আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে!");
 
+            // ইনপুট বক্স খালি করা
             document.getElementById("user-uid").value = "";
             document.getElementById("user-trx").value = "";
             selectedPackage = "";
