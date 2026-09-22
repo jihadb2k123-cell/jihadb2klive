@@ -11,12 +11,11 @@
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
-        /* টান দিয়ে রিফ্রেশ হওয়া বন্ধ করার জন্য overscroll-behavior ব্যবহার করা হয়েছে */
         html, body {
             background-color: #f8fafc;
             color: #1e293b;
             padding-bottom: 40px;
-            overscroll-behavior-y: contain; 
+            overscroll-behavior-y: contain;
         }
         .top-nav {
             background-color: #6366f1;
@@ -173,17 +172,26 @@
             border: 1px solid #e2e8f0;
             padding: 10px;
             text-align: center;
-            font-size: 14px;
+            font-size: 13px;
         }
         th { background: #f1f5f9; }
         .status-pending { color: #d97706; font-weight: bold; }
         .status-completed { color: #16a34a; font-weight: bold; }
         .status-cancelled { color: #dc2626; font-weight: bold; }
+        
+        .action-btns {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+        }
         .btn-action-complete {
-            background: #22c55e; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-right: 4px;
+            background: #22c55e; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;
         }
         .btn-action-cancel {
-            background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;
+            background: #f59e0b; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;
+        }
+        .btn-action-delete {
+            background: #ef4444; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;
         }
     </style>
 </head>
@@ -245,18 +253,18 @@
                 <div class="section">
                     <div class="section-label">Subscription Package</div>
                     <div class="grid-container">
-                        <div class="card" onclick="selectPkg(this, 'Weekly Membership (৳ 165)')">
+                        <div class="card" onclick="selectPkg(this, 'Weekly Membership (৳ 150)')">
                             <div><strong>Weekly Membership</strong></div>
-                            <button type="button" class="price-btn">৳ 165</button>
+                            <button type="button" class="price-btn">৳ 150</button>
                         </div>
                         <div class="card" onclick="selectPkg(this, 'Monthly Membership (৳ 750)')">
                             <div><strong>Monthly Membership</strong></div>
                             <button type="button" class="price-btn">৳ 750</button>
                         </div>
-                        <div class="card" onclick="selectPkg(this, 'Weekly Lite (৳ 45) - Depends on luck')">
+                        <div class="card" onclick="selectPkg(this, 'Weekly Lite (৳ 40) - Depends on luck')">
                             <div><strong>Weekly Lite</strong></div>
                             <div class="card-subtext">(Depends on luck)</div>
-                            <button type="button" class="price-btn">৳ 45</button>
+                            <button type="button" class="price-btn">৳ 40</button>
                         </div>
                         <div class="card" onclick="selectPkg(this, 'Weekly (৳ 130) - Depends on luck')">
                             <div><strong>Weekly</strong></div>
@@ -303,7 +311,7 @@
         <!-- Admin Panel -->
         <div id="admin-panel" style="display: none;">
             <div class="banner-header">🔐 Admin Dashboard</div>
-            <div class="banner-subtext">Welcome to the admin panel!</div>
+            <div class="banner-subtext">অর্ডার ক্যানসেল বা মুছে ফেলার ব্যবস্থাপনা</div>
             <div class="section">
                 <div class="section-label">Order list:</div>
                 <div class="table-responsive">
@@ -330,7 +338,6 @@
         let selectedPackage = "";
         let orders = [];
 
-        // পেজ লোড বা রিফ্রেশ হলে আগে থেকে জমা থাকা অর্ডার অটোমেটিক চলে আসবে
         window.onload = function() {
             let savedOrders = localStorage.getItem("jihad_orders");
             if (savedOrders) {
@@ -346,7 +353,6 @@
         }
 
         function submitOrder(e) {
-            // পেজ রিফ্রেশ হওয়া বা কেটে যাওয়া আটকাবে
             if (e) e.preventDefault();
 
             var uid = document.getElementById("user-uid").value.trim();
@@ -356,21 +362,16 @@
             if (!selectedPackage) { alert("অনুগ্রহ করে একটি প্যাকেজ সিলেক্ট করুন!"); return false; }
             if (!trx) { alert("অনুগ্রহ করে Transaction ID লিখুন!"); return false; }
 
-            // নতুন অর্ডার অ্যারিতে (Array) যোগ করা
             orders.unshift({ uid: uid, pkg: selectedPackage, trx: trx, status: 'Pending' });
-
-            // স্থায়ী মেমরিতে (LocalStorage) সেভ করা
             localStorage.setItem("jihad_orders", JSON.stringify(orders));
 
             alert("আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে!");
 
-            // ইনপুট ফর্ম খালি করা
             document.getElementById("user-uid").value = "";
             document.getElementById("user-trx").value = "";
             selectedPackage = "";
             document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
 
-            // টেবিল আপডেট করা
             updateTables();
             return false;
         }
@@ -424,18 +425,31 @@
                     <td>${o.trx}</td>
                     <td class="${statusClass}">${o.status}</td>
                     <td>
-                        <button class="btn-action-complete" onclick="changeStatus(${index}, 'Completed')">Complete</button>
-                        <button class="btn-action-cancel" onclick="changeStatus(${index}, 'Cancelled')">Cancel</button>
+                        <div class="action-btns">
+                            <button class="btn-action-complete" onclick="changeStatus(${index}, 'Completed')">Complete</button>
+                            <button class="btn-action-cancel" onclick="changeStatus(${index}, 'Cancelled')">Cancel</button>
+                            <button class="btn-action-delete" onclick="deleteOrder(${index})">Delete</button>
+                        </div>
                     </td>
                 </tr>`;
                 adminTbody.innerHTML += adminRow;
             });
         }
 
+        // অর্ডারের স্ট্যাটাস পরিবর্তন করা (Completed / Cancelled)
         function changeStatus(index, newStatus) {
             orders[index].status = newStatus;
             localStorage.setItem("jihad_orders", JSON.stringify(orders));
             updateTables();
+        }
+
+        // অর্ডার পুরোপুরি কেটে/মুছে ফেলার ফাংশন
+        function deleteOrder(index) {
+            if (confirm("আপনি কি নিশ্চিত যে এই অর্ডারটি মুছে ফেলতে চান?")) {
+                orders.splice(index, 1); // তালিকা থেকে নির্দিষ্ট অর্ডার মুছে ফেলা
+                localStorage.setItem("jihad_orders", JSON.stringify(orders)); // আপডেট মেমরিতে সেভ করা
+                updateTables(); // টেবিল রিফ্রেশ করা
+            }
         }
     </script>
 </body>
