@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jihadb2k Live Free Fire Top Up</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        html, body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            padding-bottom: 40px;
+            overscroll-behavior-y: contain;
+        }
+        .top-nav {
+            background-color: #6366f1;
+            color: white;
+            padding: 16px 20px;
+            font-size: 20px;
+            font-weight: 800;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .switcher-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .switcher-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 18px;
+            font-size: 18px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-topup {
+            background-color: #6366f1;
+            color: white;
+        }
+        .btn-admin {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        .banner-header {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 900;
+            color: #1e1b4b;
+            margin-bottom: 10px;
+        }
+        .banner-subtext {
+            text-align: center;
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+        .notice-box {
+            background-color: #fef3c7;
+            border: 1px solid #fde68a;
+            color: #92400e;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .payment-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .payment-box {
+            color: white;
+            padding: 14px 16px;
+            border-radius: 14px;
+            font-weight: 600;
+        }
+        .bkash-bg { background-color: #e11d48; }
+        .nagad-bg { background-color: #d97706; }
+        .rocket-bg { background-color: #7c3aed; }
+
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .input-box {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .card {
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .card.selected {
+            border: 2px solid #6366f1;
+            background-color: #e0e7ff;
+        }
+        .card-subtext {
+            font-size: 11px;
+            color: #ef4444;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+        .price-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-top: 8px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .submit-order-btn {
+            width: 100%;
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+        .order-history-section {
+            margin-top: 30px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: center;
+            font-size: 13px;
+        }
+        th { background: #f1f5f9; }
+        .status-pending { color: #d97706; font-weight: bold; }
+        .status-completed { color: #16a34a; font-weight: bold; }
+        .status-cancelled { color: #dc2626; font-weight: bold; }
+        
+        .action-btns {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+        }
+        .btn-action-complete {
+            background: #22c55e; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;
+        }
+        .btn-action-cancel {
+            background: #f59e0b; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;
+        }
+        .btn-action-delete {
+            background: #ef4444; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">🎮 Jihadb2k Live Free Fire Top Up</div>
+
+    <div class="container">
+        <div class="switcher-container">
+            <button class="switcher-btn btn-topup" onclick="showTopUp()">🎮 Top Up</button>
+            <button class="switcher-btn btn-admin" onclick="loginAdmin()">🔐 Admin</button>
+        </div>
+
+        <!-- TopUp Panel -->
+        <div id="topup-panel">
+            <div class="banner-header">Fast & Easy Top Up</div>
+            <div class="banner-subtext">Free Fire UID দিয়ে প্যাকেজ নির্বাচন করে অর্ডার তৈরি করুন।</div>
+
+            <div class="notice-box">
+                ⚠️ <b>Note:</b> নিচে দেওয়া বিকাশ, নগদ বা রকেট নম্বরে টাকা সেন্ড মানি করে Transaction ID দিয়ে অর্ডার সাবমিট করুন।
+            </div>
+
+            <div class="payment-container">
+                <div class="payment-box bkash-bg">
+                    💖 <b>bKash Personal (Send Money)</b><br>
+                    <span>01863816606</span>
+                </div>
+                <div class="payment-box nagad-bg">
+                    🟠 <b>Nagad Personal (Send Money)</b><br>
+                    <span>01863816606</span>
+                </div>
+                <div class="payment-box rocket-bg">
+                    🟣 <b>Rocket Personal (Send Money)</b><br>
+                    <span>01863816606</span>
+                </div>
+            </div>
+
+            <!-- অর্ডার ফর্ম -->
+            <form id="orderForm" onsubmit="submitOrder(event)">
+                <div class="section">
+                    <div class="section-label">Free Fire UID</div>
+                    <input type="text" id="user-uid" class="input-box" placeholder="আপনার Free Fire UID লিখুন" required>
+                </div>
+
+                <div class="section">
+                    <div class="section-label">Diamond Package</div>
+                    <div class="grid-container">
+                        <div class="card" onclick="selectPkg(this, '100 Diamonds (৳ 80)')">
+                            <div><strong>100 Diamonds</strong></div>
+                            <button type="button" class="price-btn">৳ 80</button>
+                        </div>
+                        <div class="card" onclick="selectPkg(this, '310 Diamonds (৳ 240)')">
+                            <div><strong>310 Diamonds</strong></div>
+                            <button type="button" class="price-btn">৳ 240</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-label">Subscription Package</div>
+                    <div class="grid-container">
+                        <div class="card" onclick="selectPkg(this, 'Weekly Membership (৳ 165)')">
+                            <div><strong>Weekly Membership</strong></div>
+                            <button type="button" class="price-btn">৳ 165</button>
+                        </div>
+                        <div class="card" onclick="selectPkg(this, 'Monthly Membership (৳ 750)')">
+                            <div><strong>Monthly Membership</strong></div>
+                            <button type="button" class="price-btn">৳ 750</button>
+                        </div>
+                        <div class="card" onclick="selectPkg(this, 'Weekly Lite (৳ 45) - Depends on luck')">
+                            <div><strong>Weekly Lite</strong></div>
+                            <div class="card-subtext">(Depends on luck)</div>
+                            <button type="button" class="price-btn">৳ 45</button>
+                        </div>
+                        <div class="card" onclick="selectPkg(this, 'Weekly (৳ 130) - Depends on luck')">
+                            <div><strong>Weekly</strong></div>
+                            <div class="card-subtext">(Depends on luck)</div>
+                            <button type="button" class="price-btn">৳ 130</button>
+                        </div>
+                        <div class="card" onclick="selectPkg(this, 'Monthly (৳ 500) - Depends on luck')" style="grid-column: span 2;">
+                            <div><strong>Monthly</strong></div>
+                            <div class="card-subtext">(Depends on luck)</div>
+                            <button type="button" class="price-btn">৳ 500</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-label">Transaction ID (bKash/Nagad/Rocket)</div>
+                    <input type="text" id="user-trx" class="input-box" placeholder="Transaction ID লিখুন" required>
+                </div>
+
+                <button type="submit" id="submit-btn" class="submit-order-btn">📩 Submit order</button>
+            </form>
+
+            <!-- User Order History -->
+            <div class="order-history-section">
+                <div class="section-label" style="font-size: 18px; text-align: center;">📜 List of recent orders</div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>UID</th>
+                                <th>Package</th>
+                                <th>Trx ID</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-order-list">
+                            <tr><td colspan="4">No orders have been submitted yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="admin-panel" style="display: none;">
+            <div class="banner-header">🔐 Admin Dashboard</div>
+            <div class="banner-subtext">অর্ডার ক্যানসেল বা মুছে ফেলার ব্যবস্থাপনা</div>
+            <div class="section">
+                <div class="section-label">Order list:</div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>UID</th>
+                                <th>Package</th>
+                                <th>Trx ID</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-order-list">
+                            <tr><td colspan="5">No orders have been submitted yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedPackage = "";
+        let orders = [];
+
+        window.onload = function() {
+            let savedOrders = localStorage.getItem("jihad_orders");
+            if (savedOrders) {
+                orders = JSON.parse(savedOrders);
+                updateTables();
+            }
+        };
+
+        function selectPkg(element, pkgName) {
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedPackage = pkgName;
+        }
+
+        function submitOrder(e) {
+            if (e) e.preventDefault();
+
+            var uid = document.getElementById("user-uid").value.trim();
+            var trx = document.getElementById("user-trx").value.trim();
+
+            if (!uid) { alert("অনুগ্রহ করে Free Fire UID লিখুন!"); return false; }
+            if (!selectedPackage) { alert("অনুগ্রহ করে একটি প্যাকেজ সিলেক্ট করুন!"); return false; }
+            if (!trx) { alert("অনুগ্রহ করে Transaction ID লিখুন!"); return false; }
+
+            orders.unshift({ uid: uid, pkg: selectedPackage, trx: trx, status: 'Pending' });
+            localStorage.setItem("jihad_orders", JSON.stringify(orders));
+
+            alert("আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে!");
+
+            document.getElementById("user-uid").value = "";
+            document.getElementById("user-trx").value = "";
+            selectedPackage = "";
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+
+            updateTables();
+            return false;
+        }
+
+        function showTopUp() {
+            document.getElementById("topup-panel").style.display = "block";
+            document.getElementById("admin-panel").style.display = "none";
+        }
+
+        function loginAdmin() {
+            var password = prompt("অ্যাডমিন প্যানেলে প্রবেশ করতে পাসওয়ার্ড দিন:");
+            if (password === "jihad1234") {
+                alert("পাসওয়ার্ড সঠিক হয়েছে!");
+                document.getElementById("topup-panel").style.display = "none";
+                document.getElementById("admin-panel").style.display = "block";
+                updateTables();
+            } else if (password !== null) {
+                alert("ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।");
+            }
+        }
+
+        function updateTables() {
+            var userTbody = document.getElementById("user-order-list");
+            var adminTbody = document.getElementById("admin-order-list");
+
+            if (orders.length === 0) {
+                userTbody.innerHTML = '<tr><td colspan="4">No orders have been submitted yet.</td></tr>';
+                adminTbody.innerHTML = '<tr><td colspan="5">No orders have been submitted yet.</td></tr>';
+                return;
+            }
+
+            userTbody.innerHTML = "";
+            adminTbody.innerHTML = "";
+
+            orders.forEach(function(o, index) {
+                var statusClass = 'status-pending';
+                if(o.status === 'Completed') statusClass = 'status-completed';
+                if(o.status === 'Cancelled') statusClass = 'status-cancelled';
+
+                var userRow = `<tr>
+                    <td>${o.uid}</td>
+                    <td>${o.pkg}</td>
+                    <td>${o.trx}</td>
+                    <td class="${statusClass}">${o.status}</td>
+                </tr>`;
+                userTbody.innerHTML += userRow;
+
+                var adminRow = `<tr>
+                    <td>${o.uid}</td>
+                    <td>${o.pkg}</td>
+                    <td>${o.trx}</td>
+                    <td class="${statusClass}">${o.status}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn-action-complete" onclick="changeStatus(${index}, 'Completed')">Complete</button>
+                            <button class="btn-action-cancel" onclick="changeStatus(${index}, 'Cancelled')">Cancel</button>
+                            <button class="btn-action-delete" onclick="deleteOrder(${index})">Delete</button>
+                        </div>
+                    </td>
+                </tr>`;
+                adminTbody.innerHTML += adminRow;
+            });
+        }
+
+        function changeStatus(index, newStatus) {
+            orders[index].status = newStatus;
+            localStorage.setItem("jihad_orders", JSON.stringify(orders));
+            updateTables();
+        }
+
+        function deleteOrder(index) {
+            if (confirm("আপনি কি নিশ্চিত যে এই অর্ডারটি মুছে ফেলতে চান?")) {
+                orders.splice(index, 1);
+                localStorage.setItem("jihad_orders", JSON.stringify(orders));
+                updateTables();
+            }
+        }
+    </script>
+</body>
+</html>
