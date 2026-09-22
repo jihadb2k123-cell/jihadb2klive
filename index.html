@@ -341,7 +341,8 @@
         window.onload = function() {
             let savedOrders = localStorage.getItem("jihad_orders");
             if (savedOrders) {
-                orders = JSON.parse(savedOrders);();
+                orders = JSON.parse(savedOrders);
+                updateTables();
             }
         };
 
@@ -435,19 +436,17 @@
             });
         }
 
-        // অর্ডারের স্ট্যাটাস পরিবর্তন করা (Completed / Cancelled)
         function changeStatus(index, newStatus) {
             orders[index].status = newStatus;
             localStorage.setItem("jihad_orders", JSON.stringify(orders));
             updateTables();
         }
 
-        // অর্ডার পুরোপুরি কেটে/মুছে ফেলার ফাংশন
         function deleteOrder(index) {
             if (confirm("আপনি কি নিশ্চিত যে এই অর্ডারটি মুছে ফেলতে চান?")) {
-                orders.splice(index, 1); // তালিকা থেকে নির্দিষ্ট অর্ডার মুছে ফেলা
-                localStorage.setItem("jihad_orders", JSON.stringify(orders)); // আপডেট মেমরিতে সেভ করা
-                (); //
+                orders.splice(index, 1);
+                localStorage.setItem("jihad_orders", JSON.stringify(orders));
+                updateTables();
             }
         }
     </script>
