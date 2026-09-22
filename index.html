@@ -448,7 +448,7 @@
             if (confirm("আপনি কি নিশ্চিত যে এই অর্ডারটি মুছে ফেলতে চান?")) {
                 orders.splice(index, 1); // তালিকা থেকে নির্দিষ্ট অর্ডার মুছে ফেলা
                 localStorage.setItem("jihad_orders", JSON.stringify(orders)); // আপডেট মেমরিতে সেভ করা
-                updateTables(); //
+                (); //
             }
         }
     </script>
