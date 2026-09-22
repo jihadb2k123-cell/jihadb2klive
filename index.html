@@ -341,8 +341,7 @@
         window.onload = function() {
             let savedOrders = localStorage.getItem("jihad_orders");
             if (savedOrders) {
-                orders = JSON.parse(savedOrders);
-                updateTables();
+                orders = JSON.parse(savedOrders);();
             }
         };
 
